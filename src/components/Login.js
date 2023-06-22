@@ -35,6 +35,11 @@ class Login extends Component {
     history.push('/gamePage');
   };
 
+  cfgBtn = () => {
+    const { history } = this.props;
+    history.push('/Settings');
+  };
+
   render() {
     const { name, gravatarEmail } = this.state;
     return (
@@ -68,6 +73,13 @@ class Login extends Component {
             disabled={ !this.validaInput() }
           >
             Play
+          </button>
+          <button
+            data-testid="btn-settings"
+            type="button"
+            onClick={ this.cfgBtn }
+          >
+            Settings
           </button>
         </form>
       </div>
