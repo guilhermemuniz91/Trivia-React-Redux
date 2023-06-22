@@ -1,6 +1,9 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { setName, setEmail } from '../redux/actions/login';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     name: '',
     gravatarEmail: '',
@@ -9,9 +12,12 @@ export default class Login extends Component {
 
   validaInput = () => {
     const { gravatarEmail, name } = this.state;
+    const { dispatch } = this.props;
     // if (gravatarEmail.length !== 0 && name.length !== 0) {
     //   return false;
     // }
+    dispatch(setEmail(gravatarEmail));
+    dispatch(setName(name));
     return name && gravatarEmail;
   };
 
@@ -64,3 +70,15 @@ export default class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+function mapStateToProps(state) {
+  return {
+    name: state.name,
+  };
+}
+
+export default connect(mapStateToProps)(Login);
