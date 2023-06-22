@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { fetchToken } from '../services/API';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     name: '',
     gravatarEmail: '',
@@ -25,12 +27,20 @@ export default class Login extends Component {
     );
   };
 
+  handleClick = async (event) => {
+    event.preventDefault();
+    const { history } = this.props;
+    const token = await fetchToken();
+    localStorage.setItem('token', token);
+    history.push('/gamePage');
+  };
+
   render() {
     const { name, gravatarEmail } = this.state;
     return (
       <div>
         <form action="">
-          <label htmlFor="">
+          <label htmlFor="name">
             Seu nome
             <input
               name="name"
@@ -41,7 +51,7 @@ export default class Login extends Component {
               onChange={ this.inputChange }
             />
           </label>
-          <label htmlFor="">
+          <label htmlFor="gravatarEmail">
             Seu email
             <input
               name="gravatarEmail"
@@ -54,7 +64,7 @@ export default class Login extends Component {
           </label>
           <button
             data-testid="btn-play"
-            // onClick={ this.validaInput }
+            onClick={ this.handleClick }
             disabled={ !this.validaInput() }
           >
             Play
@@ -64,3 +74,12 @@ export default class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+
+};
+
+export default Login;
