@@ -1,4 +1,4 @@
-import { SET_NAME, SET_EMAIL } from '../actions/login';
+// import { SET_NAME, SET_EMAIL } from '../actions/login';
 
 const INITIAL_STATE = {
   name: '',
@@ -7,19 +7,27 @@ const INITIAL_STATE = {
   gravatarEmail: '',
 };
 
-const playerReducer = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case SET_NAME:
+  // case SET_NAME:
+  //   return {
+  //     ...state,
+  //     name: action.payload,
+  //   };
+  // case SET_EMAIL:
+  //   return {
+  //     ...state,
+  //     gravatarEmail: action.payload,
+  //   };
+  case 'USER_INFO':
     return {
-      name: state.name + action.payload,
-    };
-  case SET_EMAIL:
-    return {
-      gravatarEmail: state.gravatarEmail + action.payload,
+      ...state,
+      name: action.payload.name,
+      gravatarEmail: action.payload.gravatarEmail,
     };
   default:
     return state;
   }
 };
 
-export default playerReducer;
+export default player;
