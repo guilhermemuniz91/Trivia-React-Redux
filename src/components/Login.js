@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setName, setEmail } from '../redux/actions/login';
+import { userInfo } from '../redux/actions';
 import { fetchToken } from '../services/API';
 
 class Login extends Component {
@@ -13,12 +13,13 @@ class Login extends Component {
 
   validaInput = () => {
     const { gravatarEmail, name } = this.state;
-    const { dispatch } = this.props;
+
     // if (gravatarEmail.length !== 0 && name.length !== 0) {
     //   return false;
     // }
-    dispatch(setEmail(gravatarEmail));
-    dispatch(setName(name));
+    // dispatch(setEmail(gravatarEmail));
+    // dispatch(setName(name));
+
     return name && gravatarEmail;
   };
 
@@ -34,10 +35,11 @@ class Login extends Component {
 
   handleClick = async (event) => {
     event.preventDefault();
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
+    dispatch(userInfo(this.state));
     const token = await fetchToken();
     localStorage.setItem('token', token);
-    history.push('/gamePage');
+    history.push('/game');
   };
 
   cfgBtn = () => {
@@ -94,16 +96,9 @@ class Login extends Component {
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
-    history: PropTypes.shape({
+  history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-
-function mapStateToProps(state) {
-  return {
-    name: state.name,
-  };
-}
-
-export default connect(mapStateToProps)(Login);
+export default connect()(Login);

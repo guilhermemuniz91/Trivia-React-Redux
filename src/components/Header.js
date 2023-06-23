@@ -14,11 +14,12 @@ class Header extends Component {
     this.gravatar();
   }
 
-  gravatar = async () => {
-    const { email } = this.props;
-    const hashEmail = md5(email).toString();
-    const request = await fetch(`https://www.gravatar.com/avatar/${hashEmail}`);
+  gravatar = () => {
+    const { player } = this.props;
+    const hashEmail = md5(player.gravatarEmail).toString();
+    // const request = await fetch(`https://www.gravatar.com/avatar/${hashEmail}`);
     // const data = request.json();
+    const request = `https://www.gravatar.com/avatar/${hashEmail}`;
     console.log(hashEmail);
     this.setState({
       imgGravatar: request,
@@ -26,31 +27,32 @@ class Header extends Component {
   };
 
   render() {
-    const { name } = this.props;
+    const { player } = this.props;
     const { imgGravatar } = this.state;
     return (
-      <thead>
-        <p data-testid="header-score" />
+      <header>
+        <p data-testid="header-score">0</p>
         <img
           data-testid="header-profile-picture"
           src={ imgGravatar }
-          alt={ imgGravatr }
+          alt={ imgGravatar }
         />
-        <p data-testid="header-player-name">{name}</p>
-      </thead>
+        <p data-testid="header-player-name">{player.name}</p>
+      </header>
     );
   }
 }
 
 Header.propTypes = {
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
+  player: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    gravatarEmail: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    name: state.player.name,
-    email: state.player.gravatarEmail,
+    player: state.player,
     // score: state.player.score,
   };
 }
