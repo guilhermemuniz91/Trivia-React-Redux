@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setName, setEmail } from '../redux/actions/login';
+import { fetchToken } from '../services/API';
 
 class Login extends Component {
   state = {
@@ -31,12 +32,25 @@ class Login extends Component {
     );
   };
 
+  handleClick = async (event) => {
+    event.preventDefault();
+    const { history } = this.props;
+    const token = await fetchToken();
+    localStorage.setItem('token', token);
+    history.push('/gamePage');
+  };
+
+  cfgBtn = () => {
+    const { history } = this.props;
+    history.push('/Settings');
+  };
+
   render() {
     const { name, gravatarEmail } = this.state;
     return (
       <div>
         <form action="">
-          <label htmlFor="">
+          <label htmlFor="name">
             Seu nome
             <input
               name="name"
@@ -47,7 +61,7 @@ class Login extends Component {
               onChange={ this.inputChange }
             />
           </label>
-          <label htmlFor="">
+          <label htmlFor="gravatarEmail">
             Seu email
             <input
               name="gravatarEmail"
@@ -60,10 +74,17 @@ class Login extends Component {
           </label>
           <button
             data-testid="btn-play"
-            // onClick={ this.validaInput }
+            onClick={ this.handleClick }
             disabled={ !this.validaInput() }
           >
             Play
+          </button>
+          <button
+            data-testid="btn-settings"
+            type="button"
+            onClick={ this.cfgBtn }
+          >
+            Settings
           </button>
         </form>
       </div>
@@ -73,7 +94,11 @@ class Login extends Component {
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
+    history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
+
 
 function mapStateToProps(state) {
   return {
