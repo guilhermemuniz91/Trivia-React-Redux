@@ -4,6 +4,11 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 
 class Feedback extends Component {
+  handleNewGame() {
+    const { history } = this.props;
+    history.push('/');
+  }
+
   render() {
     const { score, assertions } = this.props;
     const minRightAnswers = 3;
@@ -22,6 +27,12 @@ class Feedback extends Component {
         <p data-testid="feedback-total-question">
           {assertions}
         </p>
+        <button
+          onClick={ () => this.handleNewGame() }
+          data-testid="btn-play-again"
+        >
+          Jogar novamente
+        </button>
       </div>
     );
   }
