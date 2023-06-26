@@ -9,6 +9,11 @@ class Feedback extends Component {
     history.push('/');
   }
 
+  handleRanking() {
+    const { history } = this.props;
+    history.push('/ranking');
+  }
+
   render() {
     const { score, assertions } = this.props;
     const minRightAnswers = 3;
@@ -33,6 +38,14 @@ class Feedback extends Component {
         >
           Jogar novamente
         </button>
+
+        <button
+          type="button"
+          data-testid="btn-ranking"
+          onClick={ () => this.handleRanking() }
+        >
+          Ranking
+        </button>
       </div>
     );
   }
@@ -41,6 +54,9 @@ class Feedback extends Component {
 Feedback.propTypes = {
   score: PropTypes.number,
   assertions: PropTypes.number,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }.isRequired;
 
 const mapStateToProps = ({ player }) => ({
