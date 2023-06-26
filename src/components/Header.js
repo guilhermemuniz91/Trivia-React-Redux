@@ -17,8 +17,6 @@ class Header extends Component {
   gravatar = () => {
     const { player } = this.props;
     const hashEmail = md5(player.gravatarEmail).toString();
-    // const request = await fetch(`https://www.gravatar.com/avatar/${hashEmail}`);
-    // const data = request.json();
     const request = `https://www.gravatar.com/avatar/${hashEmail}`;
     console.log(hashEmail);
     this.setState({
