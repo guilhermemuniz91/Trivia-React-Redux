@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap') ;
+
+* {
+  border: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  align-items: center;
+  background: #67e8f9;
+  display: flex;
+  font-family: ' Lato' , sans-serif;
+  height: 100vh;
+  justify-content: center;
+  margin: 0;
+}
+
+.answer-correct {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.answer-wrong {
+  border: 3px solid red;
+}

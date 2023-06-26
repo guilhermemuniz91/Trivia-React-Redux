@@ -20,6 +20,8 @@ class Header extends Component {
     // const data = request.json();
     const responseGravatar = `https://www.gravatar.com/avatar/${hashEmail}`;
     // console.log(responseGravatar);
+    // const request = `https://www.gravatar.com/avatar/${hashEmail}`;
+    // console.log(hashEmail);
     this.setState({
       imgGravatar: responseGravatar,
     });
