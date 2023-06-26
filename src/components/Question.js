@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { shuffleArray } from '../services/SortArrayQuestions';
+import { scoreAction } from '../redux/actions/actionPlay';
+
 // import { connect } from 'react-redux';
 class Question extends Component {
   countDown = 0;
@@ -14,6 +18,8 @@ class Question extends Component {
       areAnswersDisabled: false,
       isNextDisabled: true,
       btnAnswerClick: false,
+      questionIndex: 0,
+      redirectToFeedback: false,
     };
   }
 
@@ -34,38 +40,84 @@ class Question extends Component {
     }
   };
 
-  handleSelectAnswer = () => {
+  handleSelectAnswer = (correct) => {
     clearInterval(this.countDown);
     this.setState({
       isNextDisabled: false,
       areAnswersDisabled: true,
       btnAnswerClick: true,
     });
+    // requisito 9
+    const TEN = 10;
+
+    const { countdown } = this.state;
+    const { dispatch } = this.props;
+    if (correct) {
+      const difficulty = this.verifyDifficulty();
+      const score = TEN + (countdown * difficulty);
+      console.log(score);
+      console.log(countdown);
+      dispatch(scoreAction(score));
+    }
+  };
+
+  // requisito 9
+  verifyDifficulty = () => {
+    const { question } = this.props;
+    const { difficulty } = question;
+    const hard = 3;
+    const medium = 2;
+    const easy = 1;
+    if (difficulty === 'hard') {
+      return hard;
+    } if (difficulty === 'medium') {
+      return medium;
+    }
+    return easy;
+  };
+
+  getNextQuestion = () => {
+    const { questionIndex } = this.state;
+    const { updateIndex } = this.props;
+    const MAX_QUESTIONS = 4;
+    if (questionIndex < MAX_QUESTIONS) { // Verifica se não é a última pergunta
+      clearInterval(this.countDown);
+      clearTimeout(this.timeOut);
+      updateIndex();
+      this.setState({
+        areAnswersDisabled: false,
+        isNextDisabled: true,
+        btnAnswerClick: false,
+        countdown: 30,
+        questionIndex: questionIndex + 1, // Avança para a próxima pergunta
+      });
+      this.countDown = this.createInterval();
+      this.timeOut = this.createTimeout();
+    } else {
+      clearInterval(this.countDown);
+      clearTimeout(this.timeOut);
+      this.setState({
+        redirectToFeedback: true,
+      });
+    }
   };
 
   handleNextQuestion = () => {
-    const { updateIndex } = this.props;
-
     clearInterval(this.countDown);
     clearTimeout(this.timeOut);
-    updateIndex();
-    this.setState({
-      areAnswersDisabled: false,
-      isNextDisabled: true,
-      btnAnswerClick: false,
-      // countdown: 30,
-    });
-    this.countDown = this.createInterval();
-    this.timeOut = this.createTimeout();
+
+    this.getNextQuestion();
   };
 
   createInterval = () => {
-    const millisToSecond = 30000;
+    const millisToSecond = 1000;
     return setInterval(() => {
-      const { countdown } = this.state;
-      if (countdown === 1) clearInterval(this.countDown);
-
-      this.setState((prevState) => ({ countdown: prevState.countdown - 1 }));
+      this.setState((prevState) => {
+        if (prevState.countdown === 1) {
+          clearInterval(this.countDown);
+        }
+        return { countdown: prevState.countdown - 1 };
+      });
     }, millisToSecond);
   };
 
@@ -73,17 +125,19 @@ class Question extends Component {
     const millisToThirtySeconds = 30000;
     return setTimeout(() => {
       console.log('CreateTimeout');
+      clearInterval(this.countDown);
       this.setState({
+        countdown: 0,
         areAnswersDisabled: true,
         isNextDisabled: false,
-
       });
     }, millisToThirtySeconds);
   };
 
   render() {
     const { question } = this.props;
-    const { areAnswersDisabled, isNextDisabled } = this.state;
+    const { areAnswersDisabled, isNextDisabled,
+      countdown, redirectToFeedback } = this.state;
     const correctAnswer = {
       answer: question.correct_answer,
       correct: true,
@@ -99,6 +153,10 @@ class Question extends Component {
       };
       return newAnswer;
     }), correctAnswer]);
+
+    if (redirectToFeedback) {
+      return <Redirect to="/feedback" />;
+    }
     return (
       <div>
         <span
@@ -106,6 +164,11 @@ class Question extends Component {
         >
           {question.category}
         </span>
+        <p className="time">
+          Time:
+          {' '}
+          { countdown }
+        </p>
         <span
           data-testid="question-text"
         >
@@ -117,7 +180,7 @@ class Question extends Component {
               key={ index }
               type="button"
               disabled={ areAnswersDisabled }
-              onClick={ () => this.handleSelectAnswer() }
+              onClick={ () => this.handleSelectAnswer(correct) }
               className={ this.handleClasses(correct) }
               data-testid={ correct ? 'correct-answer'
                 : `wrong-answer-${incorrectAnswer.indexOf}` }
@@ -151,10 +214,15 @@ Question.propTypes = {
     correct_answer: PropTypes.string,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string),
     question: PropTypes.string,
+    difficulty: PropTypes.string,
+  }).isRequired,
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
   }).isRequired,
 };
 // const mapStateToProps = (state) => ({
 //   question: state.gameReducer.questions,
 //   // currentIndex: state.gameReducer.currentIndex,
 // });
-export default Question;
+export default connect()(Question);

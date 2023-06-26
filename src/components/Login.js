@@ -8,18 +8,10 @@ class Login extends Component {
   state = {
     name: '',
     gravatarEmail: '',
-    // isDisabledButton: true,
   };
 
   validaInput = () => {
     const { gravatarEmail, name } = this.state;
-
-    // if (gravatarEmail.length !== 0 && name.length !== 0) {
-    //   return false;
-    // }
-    // dispatch(setEmail(gravatarEmail));
-    // dispatch(setName(name));
-
     return name && gravatarEmail;
   };
 
@@ -29,7 +21,6 @@ class Login extends Component {
       {
         [name]: value,
       },
-      // this.validaInput,
     );
   };
 

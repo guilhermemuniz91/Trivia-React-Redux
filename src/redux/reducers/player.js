@@ -1,29 +1,23 @@
-// import { SET_NAME, SET_EMAIL } from '../actions/login';
-
 const INITIAL_STATE = {
   name: '',
-  assertions: '',
-  score: '',
+  assertions: 0,
+  score: 0,
   gravatarEmail: '',
 };
 
 const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  // case SET_NAME:
-  //   return {
-  //     ...state,
-  //     name: action.payload,
-  //   };
-  // case SET_EMAIL:
-  //   return {
-  //     ...state,
-  //     gravatarEmail: action.payload,
-  //   };
   case 'USER_INFO':
     return {
       ...state,
       name: action.payload.name,
       gravatarEmail: action.payload.gravatarEmail,
+    };
+  case 'ADD_SCORE':
+    return {
+      ...state,
+      score: state.score + action.score,
+      assertions: state.assertions + 1,
     };
   default:
     return state;

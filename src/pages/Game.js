@@ -28,6 +28,7 @@ class Game extends React.Component {
 
   render() {
     const { questions, actualIndex } = this.state;
+    // console.log(questions[actualIndex]);
     return (
       <>
         <Header />
