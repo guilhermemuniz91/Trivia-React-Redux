@@ -3,21 +3,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Ranking extends Component {
+  // mentoria: não estou conseguindo pegar o gravatarImg do estado global
   // pegar do estado global name, score e gravatremail
+  // fazer um array de ranking
+  // mockar as informações de usuario dentro de um array
   voltarBtn = () => {
     const { history } = this.props;
     history.push('/');
   };
 
   render() {
-    const { player } = this.props;
-    console.log(player.name);
+    // const { player, score, gravatarImg } = this.props;
+    console.log(gravatarImg);
     return (
       <div>
         <li>
-          {/* <img src={player.imgGravatar} alt="imgGravatar"></img> */}
+          <img src={ gravatarImg } alt="gravatarImg" />
           {/* <p data-testid="player-name-${index}">{player.name}</p> */}
-          {/* <p data-testid="player-score-${index}">{player.score}</p> */}
+          {/* <p data-testid="player-score-${index}">{score}</p> */}
 
         </li>
         <button
@@ -46,6 +49,9 @@ Ranking.propTypes = {
 function mapStateToProps(state) {
   return {
     player: state.player,
+    score: state.player.score,
+    gravatarImg: state.player.gravatarImg,
+    ranking: state.player.ranking,
   };
 }
 
