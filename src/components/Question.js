@@ -5,7 +5,6 @@ import { Redirect } from 'react-router-dom';
 import { shuffleArray } from '../services/SortArrayQuestions';
 import { scoreAction } from '../redux/actions/actionPlay';
 
-// import { connect } from 'react-redux';
 class Question extends Component {
   countDown = 0;
 
@@ -78,7 +77,7 @@ class Question extends Component {
 
   getNextQuestion = () => {
     const { questionIndex } = this.state;
-    const { updateIndex } = this.props;
+    const { updateIndex, player } = this.props;
     const MAX_QUESTIONS = 4;
     if (questionIndex < MAX_QUESTIONS) { // Verifica se não é a última pergunta
       clearInterval(this.countDown);
@@ -99,6 +98,14 @@ class Question extends Component {
       this.setState({
         redirectToFeedback: true,
       });
+      const playerToSave = {
+        name: player.name,
+        score: player.score,
+        gravatarImg: player.gravatarImg,
+      };
+      // dispatch(setRanking(playerToSave));
+      const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+      localStorage.setItem('ranking', JSON.stringify([...ranking, playerToSave]));
     }
   };
 
@@ -206,23 +213,27 @@ class Question extends Component {
   }
 }
 Question.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
-  // history: PropTypes.func.isRequired,
-  updateIndex: PropTypes.func.isRequired,
-  question: PropTypes.shape({
-    category: PropTypes.string,
-    correct_answer: PropTypes.string,
-    incorrect_answers: PropTypes.arrayOf(PropTypes.string),
-    question: PropTypes.string,
-    difficulty: PropTypes.string,
-  }).isRequired,
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  player: PropTypes.shape({
+    gravatarImg: PropTypes.string,
+    name: PropTypes.string,
+    score: PropTypes.number,
+  }).isRequired,
+  question: PropTypes.shape({
+    category: PropTypes.string,
+    correct_answer: PropTypes.string,
+    difficulty: PropTypes.string,
+    incorrect_answers: PropTypes.arrayOf(PropTypes.string),
+    question: PropTypes.string,
+  }).isRequired,
+  updateIndex: PropTypes.func.isRequired,
 };
-// const mapStateToProps = (state) => ({
-//   question: state.gameReducer.questions,
-//   // currentIndex: state.gameReducer.currentIndex,
-// });
-export default connect()(Question);
+
+const mapStateToProps = (state) => ({
+  player: state.player,
+});
+
+export default connect(mapStateToProps)(Question);

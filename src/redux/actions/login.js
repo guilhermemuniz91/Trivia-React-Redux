@@ -1,25 +1,10 @@
-// export const SET_EMAIL = 'SET_EMAIL';
-// export const SET_NAME = 'SET_NAME';
-export const SET_SCORE = 'SET_SCORE';
+export const RESET_SCORE = 'SET_SCORE';
 export const SET_IMG_GRAVATAR = 'SET_IMG_GRAVATAR';
+// export const SET_RANKING = 'SET_RANKING';
 
-// export function setEmail(gravatarEmail) {
-//   return {
-//     type: SET_EMAIL,
-//     payload: gravatarEmail,
-//   };
-// }
-
-// export function setName(name) {
-//   return {
-//     type: SET_NAME,
-//     payload: name,
-//   };
-// }
-
-export function setScore(score) {
+export function resetScore(score) {
   return {
-    type: SET_SCORE,
+    type: RESET_SCORE,
     payload: score,
   };
 }
@@ -30,3 +15,10 @@ export function setImgGravatar(responseGravatar) {
     payload: responseGravatar,
   };
 }
+
+// export function setRanking(playerToSave) {
+//   return {
+//     type: SET_RANKING,
+//     payload: playerToSave,
+//   };
+// }

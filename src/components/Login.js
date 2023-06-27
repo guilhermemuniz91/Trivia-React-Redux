@@ -3,12 +3,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { userInfo } from '../redux/actions';
 import { fetchToken } from '../services/API';
+import { resetScore } from '../redux/actions/login';
 
 class Login extends Component {
   state = {
     name: '',
     gravatarEmail: '',
   };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(resetScore());
+  }
 
   validaInput = () => {
     const { gravatarEmail, name } = this.state;

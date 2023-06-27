@@ -1,18 +1,67 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Header from '../components/Header';
 
 class Feedback extends Component {
+  handleNewGame() {
+    const { history } = this.props;
+    history.push('/');
+  }
+
+  handleRanking() {
+    const { history } = this.props;
+    history.push('/ranking');
+  }
+
   render() {
+    const { score, assertions } = this.props;
+    const minRightAnswers = 3;
+    const feedbackText = assertions < minRightAnswers
+      ? 'Could be better...'
+      : 'Well Done!';
     return (
       <div>
-        <h1
-          data-testid="feedback-text"
+        <Header />
+        <h2 data-testid="feedback-text">
+          {feedbackText}
+        </h2>
+        <p data-testid="feedback-total-score">
+          {score}
+        </p>
+        <p data-testid="feedback-total-question">
+          {assertions}
+        </p>
+        <button
+          onClick={ () => this.handleNewGame() }
+          data-testid="btn-play-again"
         >
-          Feedback
+          Jogar novamente
+        </button>
 
-        </h1>
+        <button
+          type="button"
+          data-testid="btn-ranking"
+          onClick={ () => this.handleRanking() }
+        >
+          Ranking
+        </button>
       </div>
     );
   }
 }
 
-export default Feedback;
+Feedback.propTypes = {
+  score: PropTypes.number,
+  assertions: PropTypes.number,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+}.isRequired;
+
+const mapStateToProps = ({ player }) => ({
+  score: player.score,
+  assertions: player.assertions,
+});
+
+export default connect(mapStateToProps)(Feedback);

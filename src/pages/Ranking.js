@@ -3,10 +3,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Ranking extends Component {
-  // mentoria: não estou conseguindo pegar o gravatarImg do estado global
-  // pegar do estado global name, score e gravatremail
-  // fazer um array de ranking
-  // mockar as informações de usuario dentro de um array
+  state = {
+    rankingSort: [],
+  };
+
+  componentDidMount() {
+    const ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+    const ordenado = ranking.sort((a, b) => b.score - a.score);
+    this.setState({
+      rankingSort: ordenado,
+    });
+  }
+
   voltarBtn = () => {
     const { history } = this.props;
     history.push('/');
@@ -14,15 +22,20 @@ class Ranking extends Component {
 
   render() {
     // const { player, score, gravatarImg } = this.props;
-    console.log(gravatarImg);
+    const { rankingSort } = this.state;
+    // console.log(gravatarImg);
     return (
       <div>
-        <li>
-          <img src={ gravatarImg } alt="gravatarImg" />
-          {/* <p data-testid="player-name-${index}">{player.name}</p> */}
-          {/* <p data-testid="player-score-${index}">{score}</p> */}
+        { rankingSort.map((ranking, index) => (
+          <div key={ index }>
+            <img src={ ranking.gravatarImg } alt="gravatarImg" />
+            <p data-testid={ `player-name-${index}` }>{ranking.name}</p>
+            <p data-testid={ `player-score-${index}` }>{ranking.score}</p>
+          </div>
 
-        </li>
+        ))}
+        <h1 data-testid="ranking-title">Ranking</h1>
+
         <button
           data-testid="btn-go-home"
           type="button"
@@ -40,9 +53,9 @@ Ranking.propTypes = {
     push: PropTypes.func,
   }).isRequired,
   player: PropTypes.shape({
-    imgGravatar: PropTypes.string,
+    gravatarImg: PropTypes.string,
     name: PropTypes.string,
-    score: PropTypes.string,
+    score: PropTypes.number,
   }).isRequired,
 };
 

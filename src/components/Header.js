@@ -33,7 +33,7 @@ class Header extends Component {
     const { imgGravatar } = this.state;
     return (
       <header>
-        <p data-testid="header-score">0</p>
+        <p data-testid="header-score">{player.score}</p>
         <img
           data-testid="header-profile-picture"
           src={ imgGravatar }
@@ -53,6 +53,7 @@ Header.propTypes = {
   player: PropTypes.shape({
     gravatarEmail: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
   }).isRequired,
 };
 
@@ -62,6 +63,7 @@ function mapStateToProps(state) {
     player: state.player,
     // score: state.player.score,
     Img: state.player.gravatarImg,
+    score: state.player.score,
   };
 }
 
