@@ -1,9 +1,8 @@
-// import { MD5 } from 'crypto-js';
-// import md5 from 'md5';
 import md5 from 'crypto-js/md5';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { setImgGravatar } from '../redux/actions/login';
 
 class Header extends Component {
   state = {
@@ -15,13 +14,18 @@ class Header extends Component {
   }
 
   gravatar = () => {
-    const { player } = this.props;
+    const { player, dispatch } = this.props;
     const hashEmail = md5(player.gravatarEmail).toString();
-    const request = `https://www.gravatar.com/avatar/${hashEmail}`;
-    console.log(hashEmail);
+    // const request = await fetch(`https://www.gravatar.com/avatar/${hashEmail}`);
+    // const data = request.json();
+    const responseGravatar = `https://www.gravatar.com/avatar/${hashEmail}`;
+    // console.log(responseGravatar);
+    // const request = `https://www.gravatar.com/avatar/${hashEmail}`;
+    // console.log(hashEmail);
     this.setState({
-      imgGravatar: request,
+      imgGravatar: responseGravatar,
     });
+    dispatch(setImgGravatar(responseGravatar));
   };
 
   render() {
@@ -42,16 +46,23 @@ class Header extends Component {
 }
 
 Header.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  gravatarImg: PropTypes.shape({
+    gravatarImg: PropTypes.string,
+  }).isRequired,
   player: PropTypes.shape({
-    name: PropTypes.string.isRequired,
     gravatarEmail: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     score: PropTypes.number.isRequired,
   }).isRequired,
 };
 
 function mapStateToProps(state) {
+  console.log(state.Img);
   return {
     player: state.player,
+    // score: state.player.score,
+    Img: state.player.gravatarImg,
     score: state.player.score,
   };
 }
